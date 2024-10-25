@@ -3,15 +3,10 @@ name: ACA - Diesel ORMless
 concurrency: production
 
 env:
-  AZURE_RESOURCE_GROUP: diesel-xe76xqytpbjwg-rg
-  AZURE_CONTAINER_APP_NAME: dfb-diesel-ca-xe76xqytpbjwg
-  AZURE_CONTAINER_REGISTRY: dfbdieselxe76xqytpbjwgregistry
-  IMAGE_NAME: server-diesel-async-ormless
-  CRATE_SUBFOLDER: server-diesel-async-ormless
-  AZURE_REGISTRY_AUTH_GH_SECRET: AZURE_REG_ORMLESS
-
-
-
+  AZURE_CONTAINER_APP_NAME: dfberrycontainerapp
+  AZURE_GROUP_NAME: rust-axum-server
+  AZURE_CONTAINER_REGISTRY: dfberryregistry
+  IMAGE_NAME: server-source-board-rust
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
   #push:
@@ -30,28 +25,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Extract auth from JSON secret
-        run: |
-          echo "${{ secrets.AZURE_REGISTRY_AUTH_GH_SECRET }}" > secret.json
-          AZURE_CONTAINER_REGISTRY_LOGIN_SERVER1=$(jq -r '.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER' secret.json)
-          echo "AZURE_CONTAINER_REGISTRY_LOGIN_SERVER1=${AZURE_CONTAINER_REGISTRY_LOGIN_SERVER}" >>${GITHUB_ENV}
-          AZURE_CONTAINER_REGISTRY_USERNAME=$(jq -r '.AZURE_CONTAINER_REGISTRY_USERNAME' secret.json)
-          echo "AZURE_CONTAINER_REGISTRY_USERNAME=${AZURE_CONTAINER_REGISTRY_USERNAME}" >>${GITHUB_ENV}
-          AZURE_CONTAINER_REGISTRY_PASSWORD=$(jq -r '.AZURE_CONTAINER_REGISTRY_PASSWORD' secret.json)
-          echo "AZURE_CONTAINER_REGISTRY_PASSWORD=${AZURE_CONTAINER_REGISTRY_PASSWORD}" >>${GITHUB_ENV}
-
       - name: Checkout to the branch
         uses: actions/checkout@v2
 
       - name: Print out app version
         run: |
-          VERSION=$(grep '^version' "${{ env.CRATE_SUBFOLDER }}/Cargo.toml" | sed -E 's/version = "(.*)"/\1/')
+          VERSION=$(grep '^version' Cargo.toml | sed -E 's/version = "(.*)"/\1/')
           echo "APP_VERSION=${VERSION}" >>${GITHUB_ENV}
 
       - name: Set up Docker Buildx
@@ -60,9 +39,9 @@ jobs:
       - name: Log in to Azure Container Registry
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ env.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}
-          username: ${{ env.AZURE_CONTAINER_REGISTRY_USERNAME }}
-          password: ${{ env.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+          login-server: ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
 
       - name: Lowercase the repo name and username
         run: echo "REPO_NAME=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
@@ -94,5 +73,5 @@ jobs:
         with:
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp registry set -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP }} --server ${{ env.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ env.AZURE_CONTAINER_REGISTRY_USERNAME }} --password ${{ env.AZURE_CONTAINER_REGISTRY_PASSWORD }}
-            az containerapp update -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP }} --image ${{ env.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            az containerapp registry set -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_GROUP_NAME }} --server ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }} --password ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+            az containerapp update -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_GROUP_NAME }} --image ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
