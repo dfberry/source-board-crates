@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: diesel-container-app
+metadata:
+  template: diesel-container-app@0.0.2-beta
+
+# AZD doesn't support Rust deployments yet
