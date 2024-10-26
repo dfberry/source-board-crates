@@ -7,7 +7,7 @@ env:
   AZURE_GROUP_NAME: rust-axum-server
   AZURE_CONTAINER_REGISTRY: dfberryregistry
   IMAGE_NAME: server-source-board-rust
-  SUBDIR: crates/server-diesel-async-ormless
+  APPNAME: server-diesel-async-ormless
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
   #push:
@@ -55,7 +55,7 @@ jobs:
             ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           file: ./Dockerfile
           build-args: |
-            SUBDIR=${{ env.SUBDIR }}
+            APPNAME=${{ env.APPNAME }}
 
   deploy:
     runs-on: ubuntu-latest

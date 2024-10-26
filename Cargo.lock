@@ -90,17 +90,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "axum-diesel-async-example"
-version = "0.1.0"
-dependencies = [
- "axum",
- "diesel",
- "diesel-async",
- "dotenvy",
- "tokio",
-]
-
-[[package]]
 name = "backtrace"
 version = "0.3.74"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -862,6 +851,17 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "server-diesel-async-ormless"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "diesel",
+ "diesel-async",
+ "dotenvy",
+ "tokio",
 ]
 
 [[package]]

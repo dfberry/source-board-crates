@@ -1,6 +1,6 @@
 FROM rust as builder
 
-ARG SUBDIR
+ARG APPNAME
 
 RUN apt update && apt install -y libpq-dev
 
@@ -9,7 +9,7 @@ RUN apt update && apt install -y libpq-dev
 
 WORKDIR /app
 
-COPY ./$SUBDIR .
+COPY ./crates/$APPNAME .
 
 RUN ls -la
 RUN cargo build --release
@@ -21,9 +21,10 @@ RUN apt update && apt install -y libpq-dev
 WORKDIR /app
 
 # Copy the built application from the first stage
-COPY --from=builder /app/target/release/source-board-server /app/source-board-server
-COPY --from=builder /app/ARG SUBDIR/Cargo.toml /app/Cargo.toml
+COPY --from=builder /app/target/release/$APPNAME /app/$APPNAME
+COPY --from=builder /app/Cargo.toml /app/Cargo.toml
 
 RUN ls -la
 
-CMD ["/app/source-board-server"]
+
+CMD ["/app/$APPNAME"]
