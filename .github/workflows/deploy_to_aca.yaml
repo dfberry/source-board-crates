@@ -6,7 +6,7 @@ env:
   AZURE_CONTAINER_APP_NAME: dfberrycontainerapp
   AZURE_GROUP_NAME: rust-axum-server
   AZURE_CONTAINER_REGISTRY: dfberryregistry
-  IMAGE_NAME: server-source-board-rust
+  IMAGE_NAME: server-diesel-async-ormless
   APPNAME: server-diesel-async-ormless
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
