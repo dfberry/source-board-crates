@@ -9,7 +9,7 @@ use diesel_async::{
 use dotenvy::dotenv;
 use tokio::sync::OnceCell;
 
-use axum_diesel_async_example::schema;
+mod schema;
 
 async fn build_connection_pool() -> Pool<AsyncPgConnection> {
     dotenv().ok();
