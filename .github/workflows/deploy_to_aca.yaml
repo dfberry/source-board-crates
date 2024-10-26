@@ -3,9 +3,9 @@ name: ACA - Diesel ORMless
 concurrency: production
 
 env:
-  AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP: diesel-xe76xqytpbjwg-rg
-  AZURE_CONTAINER_APP_NAME: dfb-diesel-ca-xe76xqytpbjwg
-  AZURE_REGISTRY: dfbdieselxe76xqytpbjwgregistry
+  AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP: diesel-kpjttpihfhbcm-rg
+  AZURE_CONTAINER_APP_NAME: dfb-diesel-ca-kpjttpihfhbcm
+  AZURE_REGISTRY: dfbdieselkpjttpihfhbcmregistry
   IMAGE_NAME: server-diesel-async-ormless
   APPNAME: server-diesel-async-ormless
 on:
