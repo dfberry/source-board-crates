@@ -10,9 +10,11 @@ RUN apt update && apt install -y libpq-dev
 WORKDIR /app
 
 COPY ./$SUBDIR .
-RUN ls -la
 
-RUN cd $SUBDIR && cargo build --release
+WORKDIR /app/$SUBDIR
+
+RUN ls -la
+RUN cargo build --release
 #---------------------------------------------
 FROM rust as server
 
