@@ -3,9 +3,10 @@ name: ACA - Diesel ORMless
 concurrency: production
 
 env:
-  AZURE_CONTAINER_APP_NAME: dfberrycontainerapp
-  AZURE_GROUP_NAME: rust-axum-server
-  AZURE_CONTAINER_REGISTRY: dfberryregistry
+  AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP: diesel-xe76xqytpbjwg-rg
+  AZURE_CONTAINER_APP_NAME: dfb-diesel-ca-xe76xqytpbjwg
+  AZURE_REGISTRY_GROUP_NAME: rust-axum-server
+  AZURE_REGISTRY: dfberryregistry
   IMAGE_NAME: server-diesel-async-ormless
   APPNAME: server-diesel-async-ormless
 on:
@@ -71,10 +72,13 @@ jobs:
         id: extract_repo
         run: echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
+
+      # Registry is in one RG
+      # Container App is in another RG
       - name: Deploy to containerapp
         uses: azure/cli@v2
         with:
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp registry set -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_GROUP_NAME }} --server ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }} --password ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
-            az containerapp update -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_GROUP_NAME }} --image ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            az containerapp registry set -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP }} --server ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }} --password ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+            az containerapp update -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP }} --image ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}

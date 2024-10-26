@@ -50,7 +50,7 @@ module app 'core/host/container-app-upsert.bicep' = {
         secretRef: 'dbpass'
       }
     ]
-    targetPort: 50505
+    targetPort: 4000
     secrets: [
       {
         name: 'dbpass'

@@ -861,6 +861,10 @@ dependencies = [
  "diesel",
  "diesel-async",
  "dotenvy",
+ "rand",
+ "serde",
+ "serde_derive",
+ "serde_json",
  "tokio",
 ]
 
