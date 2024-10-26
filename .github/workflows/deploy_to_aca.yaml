@@ -5,8 +5,7 @@ concurrency: production
 env:
   AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP: diesel-xe76xqytpbjwg-rg
   AZURE_CONTAINER_APP_NAME: dfb-diesel-ca-xe76xqytpbjwg
-  AZURE_REGISTRY_GROUP_NAME: rust-axum-server
-  AZURE_REGISTRY: dfberryregistry
+  AZURE_REGISTRY: dfbdieselxe76xqytpbjwgregistry
   IMAGE_NAME: server-diesel-async-ormless
   APPNAME: server-diesel-async-ormless
 on:
