@@ -7,6 +7,7 @@ env:
   AZURE_GROUP_NAME: rust-axum-server
   AZURE_CONTAINER_REGISTRY: dfberryregistry
   IMAGE_NAME: server-source-board-rust
+  SUBDIR: crates/server-diesel-async-ormless
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
   #push:
@@ -30,7 +31,7 @@ jobs:
 
       - name: Print out app version
         run: |
-          VERSION=$(grep '^version' Cargo.toml | sed -E 's/version = "(.*)"/\1/')
+          VERSION=$(grep '^version' "${{ env.SUBDIR }}/Cargo.toml" | sed -E 's/version = "(.*)"/\1/')
           echo "APP_VERSION=${VERSION}" >>${GITHUB_ENV}
 
       - name: Set up Docker Buildx
@@ -53,6 +54,8 @@ jobs:
           tags: |
             ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           file: ./Dockerfile
+          build-args: |
+            SUBDIR=${{ env.SUBDIR }}
 
   deploy:
     runs-on: ubuntu-latest
