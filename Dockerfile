@@ -11,8 +11,6 @@ WORKDIR /app
 
 COPY ./$SUBDIR .
 
-WORKDIR /app/$SUBDIR
-
 RUN ls -la
 RUN cargo build --release
 #---------------------------------------------
