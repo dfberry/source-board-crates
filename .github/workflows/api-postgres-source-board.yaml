@@ -31,10 +31,6 @@ jobs:
     #   - name: Checkout to the branch
     #     uses: actions/checkout@v2
 
-      - defaults:
-          run:
-            working-directory: ${{ github.workspace }}/crates/${{ env.APPNAME }}
-
       - name: Print out app version
         run: |
           VERSION=$(grep '^version' "${{ env.APPNAME }}/Cargo.toml" | sed -E 's/version = "(.*)"/\1/')
@@ -59,7 +55,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          file: ./Dockerfile
+          file: ./crates/${{ env.APPNAME }}/Dockerfile
 
   # deploy:
   #   runs-on: ubuntu-latest
