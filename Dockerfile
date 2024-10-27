@@ -31,4 +31,4 @@ COPY --from=builder /app/Cargo.toml /app/Cargo.toml
 RUN ls -la
 
 
-CMD ["/app/$APPNAME"]
+CMD sh -c "/app/$APPNAME"
