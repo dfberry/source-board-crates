@@ -2,12 +2,12 @@ name: ACA - Diesel ORMless
 
 concurrency: production
 
-env:
-  AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP: diesel-kpjttpihfhbcm-rg
-  AZURE_CONTAINER_APP_NAME: dfb-diesel-ca-kpjttpihfhbcm
-  AZURE_REGISTRY: dfbdieselkpjttpihfhbcmregistry
-  IMAGE_NAME: server-diesel-async-ormless
-  APPNAME: server-diesel-async-ormless
+# env:
+#   AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP: diesel-kpjttpihfhbcm-rg
+#   AZURE_CONTAINER_APP_NAME: dfb-diesel-ca-kpjttpihfhbcm
+#   AZURE_REGISTRY: dfbdieselkpjttpihfhbcmregistry
+#   IMAGE_NAME: api-postgres-source-board
+#   APPNAME: api-postgres-source-board
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
   #push:
@@ -16,6 +16,22 @@ on:
 
   # Allow mannually trigger 
   workflow_dispatch:    
+    inputs:
+      AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP:
+        description: 'Azure Container App Name Resource Group'
+        required: true
+      AZURE_CONTAINER_APP_NAME:
+        description: 'Azure Container App Name'
+        required: true
+      AZURE_REGISTRY:
+        description: 'Azure Registry'
+        required: true
+      IMAGE_NAME:
+        description: 'Image Name'
+        required: true
+      APPNAME:
+        description: 'App Name'
+        required: true
 
 permissions:
   id-token: write
@@ -54,6 +70,8 @@ jobs:
           tags: |
             ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           file: ./Dockerfile
+          cache-from: type=local,src=/dev/null # This is to disable cache
+          cache-to: type=local,dest=/dev/null # This is to disable cache
           build-args: |
             APPNAME=${{ env.APPNAME }}
 

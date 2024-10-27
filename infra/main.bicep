@@ -115,6 +115,7 @@ module web 'web.bicep' = {
     postgresDatabaseName: postgresDatabaseName
     postgresPassword: postgresPassword
     database_url: 'test'
+    port: '4000'
     exists: webAppExists
   }
 }

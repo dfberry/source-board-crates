@@ -7,6 +7,7 @@ param containerAppsEnvironmentName string
 param containerRegistryName string
 param serviceName string = 'web'
 param exists bool
+param port string
 param postgresDomainName string
 param postgresDatabaseName string
 param postgresUser string
@@ -64,7 +65,7 @@ module app 'core/host/container-app-upsert.bicep' = {
         secretRef: 'port'
       }
     ]
-    targetPort: 4000
+    targetPort: int(port)
     secrets: [
       {
         name: 'dbpass'
@@ -80,7 +81,7 @@ module app 'core/host/container-app-upsert.bicep' = {
       }
       {
         name: 'port'
-        value: '4000'
+        value: port
       }
     ]
   }
