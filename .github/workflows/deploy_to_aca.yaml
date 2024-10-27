@@ -20,18 +20,23 @@ on:
       AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP:
         description: 'Azure Container App Name Resource Group'
         required: true
+        default: 'diesel-kpjttpihfhbcm-rg'
       AZURE_CONTAINER_APP_NAME:
         description: 'Azure Container App Name'
         required: true
+        default: 'dfb-diesel-ca-kpjttpihfhbcm'
       AZURE_REGISTRY:
         description: 'Azure Registry'
         required: true
+        default: 'dfbdieselkpjttpihfhbcmregistry'
       IMAGE_NAME:
         description: 'Image Name'
         required: true
+        default: 'api-postgres-source-board'
       APPNAME:
         description: 'App Name'
         required: true
+        default: 'api-postgres-source-board'
 
 permissions:
   id-token: write
