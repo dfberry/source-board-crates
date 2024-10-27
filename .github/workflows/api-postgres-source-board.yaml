@@ -8,6 +8,7 @@ env:
   AZURE_REGISTRY: dfbdieselkpjttpihfhbcmregistry
   IMAGE_NAME: api-postgres-source-board
   APPNAME: api-postgres-source-board
+
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
   #push:
@@ -54,7 +55,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          file: ${{ env.IMAGE_NAME }}/Dockerfile
+          file: ./${{ env.IMAGE_NAME }}/Dockerfile
 
   # deploy:
   #   runs-on: ubuntu-latest
