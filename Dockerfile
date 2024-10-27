@@ -30,5 +30,5 @@ COPY --from=builder /app/Cargo.toml /app/Cargo.toml
 
 RUN ls -la
 
-
+RUN chmod +x /app/$APPNAME
 CMD sh -c "/app/$APPNAME"
