@@ -92,12 +92,15 @@ jobs:
         id: extract_repo
         run: echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
-      # Registry is in one RG
-      # Container App is in another RG
-      - name: Deploy to containerapp
+      - name: Az set registry for containerapp
         uses: azure/cli@v2
         with:
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
             az containerapp registry set -n ${{ github.event.inputs.AZURE_CONTAINER_APP_NAME }} -g ${{ github.event.inputs.AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP }} --server ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }} --password ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+
+      - name: Az update containerapp image
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
             az containerapp update -n ${{ github.event.inputs.AZURE_CONTAINER_APP_NAME }} -g ${{ github.event.inputs.AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP }} --image ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ github.event.inputs.IMAGE_NAME }}:${{ github.sha }}
