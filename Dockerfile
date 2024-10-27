@@ -2,7 +2,9 @@ FROM rust as builder
 
 ARG APPNAME
 
-RUN apt update && apt install -y libpq-dev
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    postgresql-client
 
 #https://www.reddit.com/r/rust/comments/1f0ibyq/rust_diesel_postgres_container/
 #RUN cargo install diesel_cli --no-default-features --features postgres
@@ -16,7 +18,9 @@ RUN cargo build --release
 #---------------------------------------------
 FROM rust as server
 
-RUN apt update && apt install -y libpq-dev
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    postgresql-client
 
 WORKDIR /app
 

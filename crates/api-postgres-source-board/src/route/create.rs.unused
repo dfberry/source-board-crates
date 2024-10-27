@@ -1,0 +1,27 @@
+use dotenvy::dotenv;
+use diesel::prelude::*;
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+use std::net::SocketAddr;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use crate::State;
+use crate::Json;
+use crate::StatusCode;
+use crate::route::error::internal_error;
+
+async fn create(
+    State(pool): State<deadpool_diesel::postgres::Pool>,
+    Json(new_user): Json<NewUser>,
+) -> Result<Json<User>, (StatusCode, String)> {
+    let conn = pool.get().await.map_err(internal_error)?;
+    let res = conn
+        .interact(|conn| {
+            diesel::insert_into(users::table)
+                .values(new_user)
+                .returning(User::as_returning())
+                .get_result(conn)
+        })
+        .await
+        .map_err(internal_error)?
+        .map_err(internal_error)?;
+    Ok(Json(res))
+}

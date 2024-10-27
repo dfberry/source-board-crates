@@ -7,15 +7,22 @@
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"features": {
 		"ghcr.io/devcontainers/features/azure-cli:1": {},
-		"ghcr.io/azure/azure-dev/azd:0": {}
+		"ghcr.io/azure/azure-dev/azd:0": {},
+		"ghcr.io/itsmechlark/features/postgresql:1": {
+			"version": "16"
+		}
 	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"GitHub.copilot-chat",
+				"rust-lang.rust-analyzer",
+				"vadimcn.vscode-lldb",
+				"PolyMeilex.rust-targets",
+				"1YiB.rust-bundle",
 				"humao.rest-client",
-				"ms-ossdata.vscode-postgresql",
-				"ms-azuretools.vscode-docker"
+				"mhutchie.git-graph",
+				"eamodio.gitlens",
+				"GitHub.vscode-pull-request-github"
 			]
 		}
 	},

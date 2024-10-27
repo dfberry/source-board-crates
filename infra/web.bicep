@@ -12,6 +12,8 @@ param postgresDatabaseName string
 param postgresUser string
 @secure()
 param postgresPassword string
+@secure()
+param database_url string
 
 resource webIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: identityName
@@ -49,12 +51,36 @@ module app 'core/host/container-app-upsert.bicep' = {
         name: 'DBPASS'
         secretRef: 'dbpass'
       }
+      {
+        name: 'DATABASE_URL'
+        secretRef: 'database-url'
+      }
+      {
+        name: 'ENVIRONMENT'
+        secretRef: 'environment'
+      }
+      {
+        name: 'PORT'
+        secretRef: 'port'
+      }
     ]
     targetPort: 4000
     secrets: [
       {
         name: 'dbpass'
         value: postgresPassword
+      }
+      {
+        name: 'database-url'
+        value: database_url
+      }     
+      {
+        name: 'environment'
+        value: 'production'
+      }
+      {
+        name: 'port'
+        value: '4000'
       }
     ]
   }

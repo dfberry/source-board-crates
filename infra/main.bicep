@@ -114,6 +114,7 @@ module web 'web.bicep' = {
     postgresUser: postgresUser
     postgresDatabaseName: postgresDatabaseName
     postgresPassword: postgresPassword
+    database_url: 'test'
     exists: webAppExists
   }
 }
