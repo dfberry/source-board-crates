@@ -28,4 +28,4 @@ COPY --from=builder /app/Cargo.toml /app/Cargo.toml
 
 RUN ls -la
 
-CMD ["./api-postgres-source-board"]
+CMD ["/app/api-postgres-source-board"]
