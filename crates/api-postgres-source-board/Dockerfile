@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY ./crates/api-postgres-source-board .
+COPY . .
 
 RUN ls -la
 RUN cargo build --release
