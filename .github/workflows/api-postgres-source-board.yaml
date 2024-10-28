@@ -3,9 +3,9 @@ name: api-postgres-source-board
 concurrency: production
 
 env:
-  AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP: diesel-kpjttpihfhbcm-rg
-  AZURE_CONTAINER_APP_NAME: dfb-diesel-ca-kpjttpihfhbcm
-  AZURE_REGISTRY: dfbdieselkpjttpihfhbcmregistry
+  AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP: diesel-qtbajgkjdzepy-rg
+  AZURE_CONTAINER_APP_NAME: dfberry-api-1-ca-qtbajgkjdzepy
+  AZURE_REGISTRY: dfberryapi1qtbajgkjdzepyregistry
   IMAGE_NAME: api-postgres-source-board
   APPNAME: api-postgres-source-board
 
