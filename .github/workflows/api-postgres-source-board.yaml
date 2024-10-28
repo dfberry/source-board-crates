@@ -59,7 +59,7 @@ jobs:
 
   deploy-from-registry:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-to-registry
 
     steps:
       - name: Azure Login
