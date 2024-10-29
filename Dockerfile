@@ -12,6 +12,7 @@ WORKDIR /app
 COPY . .
 
 RUN ls -la
+RUN cargo build --release
 #---------------------------------------------
 FROM rust as server
 
