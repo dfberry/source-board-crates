@@ -12,7 +12,7 @@ WORKDIR /app
 COPY . .
 
 RUN ls -la
-RUN cargo build --release
+RUN cd api-postgres-source-board && cargo build --release
 #---------------------------------------------
 FROM rust as server
 
