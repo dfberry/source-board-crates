@@ -1,13 +1,10 @@
 name: api-postgres-source-board
 
-concurrency: production
-
-# env:
-#   AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP: diesel-qtbajgkjdzepy-rg
-#   AZURE_CONTAINER_APP_NAME: dfberry-api-1-ca-qtbajgkjdzepy
-#   AZURE_REGISTRY: dfberryapi1qtbajgkjdzepyregistry
-#   IMAGE_NAME: api-postgres-source-board
-#   APPNAME: api-postgres-source-board
+env:
+  AZURE_RESOURCE_GROUP: diesel-qtbajgkjdzepy-rg
+  AZURE_CONTAINER_APP_NAME: dfberry-api-1-ca-qtbajgkjdzepy
+  AZURE_REGISTRY: dfberryapi1qtbajgkjdzepyregistry
+  IMAGE: api-postgres-source-board
 
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
@@ -17,23 +14,6 @@ on:
 
   # Allow mannually trigger 
   workflow_dispatch:   
-    inputs:
-          AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP:
-            description: 'Azure Container App Name Resource Group'
-            required: true
-            default: 'diesel-qtbajgkjdzepy-rg'
-          AZURE_CONTAINER_APP_NAME:
-            description: 'Azure Container App Name'
-            required: true
-            default: 'dfberry-api-1-ca-qtbajgkjdzepy'
-          AZURE_REGISTRY:
-            description: 'Azure Registry'
-            required: true
-            default: 'dfberryapi1qtbajgkjdzepyregistry'
-          DIR:
-            description: 'Image Name'
-            required: true
-            default: 'api-postgres-source-board'
 
 permissions:
   id-token: write
@@ -63,33 +43,36 @@ jobs:
           username: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
           password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
 
+      - name: Verify Docker login
+        run: docker info
+
       # Push build cache to registry along with image (different tags)
       - name: Build and push container image to Azure Container Registry
         uses: docker/build-push-action@v2
         with:
           push: true
           tags: |
-            ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ github.event.inputs.DIR }}:${{ github.sha }}
+            ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE }}:${{ github.sha }}
           file: ./Dockerfile
 
-  deploy:
-      runs-on: ubuntu-latest
-      needs: build
+  # deploy:
+  #     runs-on: ubuntu-latest
+  #     needs: build
 
-      steps:
-        - name: Azure Login
-          uses: azure/login@v2
-          with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
+  #     steps:
+  #       - name: Azure Login
+  #         uses: azure/login@v2
+  #         with:
+  #           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-        - name: Extract repository name
-          id: extract_repo
-          run: echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+  #       - name: Extract repository name
+  #         id: extract_repo
+  #         run: echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
-        - name: Deploy to containerapp
-          uses: azure/cli@v2
-          with:
-            inlineScript: |
-              az config set extension.use_dynamic_install=yes_without_prompt
-              az containerapp registry set -n ${{ github.event.inputs.AZURE_CONTAINER_APP_NAME }} -g ${{ github.event.inputs.AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP }} --server ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }} --password ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
-              az containerapp update -n ${{ github.event.inputs.AZURE_CONTAINER_APP_NAME }} -g ${{ github.event.inputs.AZURE_CONTAINER_APP_NAME_RESOURCE_GROUP }} --image ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ github.event.inputs.DIR }}:${{ github.sha }}
+  #       - name: Deploy to containerapp
+  #         uses: azure/cli@v2
+  #         with:
+  #           inlineScript: |
+  #             az config set extension.use_dynamic_install=yes_without_prompt
+  #             az containerapp registry set -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP }} --server ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }} --password ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+  #             az containerapp update -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP }} --image ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE }}:${{ github.sha }}
