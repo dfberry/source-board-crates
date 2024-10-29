@@ -60,7 +60,6 @@ jobs:
 
       - name: Print out app version
         run: |
-          cd crates/api-postgres-source-board
           VERSION=$(grep '^version' "Cargo.toml" | sed -E 's/version = "(.*)"/\1/')
           echo "APP_VERSION=${VERSION}" >>${GITHUB_ENV}
 
