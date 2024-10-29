@@ -51,7 +51,7 @@ jobs:
 
       - name: Print out app version
         run: |
-          VERSION=$(grep '^version' "${{ env.SUBDIR }}/Cargo.toml" | sed -E 's/version = "(.*)"/\1/')
+          VERSION=$(grep '^version' "Cargo.toml" | sed -E 's/version = "(.*)"/\1/')
           echo "APP_VERSION=${VERSION}" >>${GITHUB_ENV}
 
       - name: Set up Docker Buildx
