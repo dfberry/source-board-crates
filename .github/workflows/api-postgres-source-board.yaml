@@ -43,20 +43,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: crates/${{ github.event.inputs.DIR }}
-
     steps:
 
       - name: Checkout to the branch
         uses: actions/checkout@v2
-
-      - name: Ls
-        run: |
-          pwd
-          ls -la
-
 
       - name: Print out app version
         run: |
