@@ -43,6 +43,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: crates/${{ github.event.inputs.DIR }}
+
     steps:
 
       - name: Checkout to the branch
@@ -56,6 +60,7 @@ jobs:
 
       - name: Print out app version
         run: |
+          cd crates/api-postgres-source-board
           VERSION=$(grep '^version' "Cargo.toml" | sed -E 's/version = "(.*)"/\1/')
           echo "APP_VERSION=${VERSION}" >>${GITHUB_ENV}
 
