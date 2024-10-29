@@ -1,9 +1,9 @@
 name: api-postgres-source-board
 
 env:
-  AZURE_RESOURCE_GROUP: diesel-qtbajgkjdzepy-rg
-  AZURE_CONTAINER_APP_NAME: dfberry-api-1-ca-qtbajgkjdzepy
-  AZURE_REGISTRY: dfberryapi1qtbajgkjdzepyregistry
+  AZURE_CONTAINER_APP_NAME: dfberrycontainerapp
+  AZURE_GROUP_NAME: rust-axum-server
+  AZURE_CONTAINER_REGISTRY: dfberryregistry
   IMAGE: api-postgres-source-board
 
 on:
