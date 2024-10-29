@@ -86,9 +86,9 @@ jobs:
             ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ github.event.inputs.DIR }}:${{ github.sha }}
           file: ./Dockerfile
 
-  deploy-from-registry:
+  deploy:
     runs-on: ubuntu-latest
-    needs: build-to-registry
+    needs: build
 
     steps:
       - name: Azure Login
