@@ -1,10 +1,10 @@
-name: api-postgres-source-board
+name: build-and-deploy
 
 env:
-  AZURE_CONTAINER_APP_NAME: dfberrycontainerapp
-  AZURE_GROUP_NAME: rust-axum-server
-  AZURE_CONTAINER_REGISTRY: dfberryregistry
-  IMAGE: api-postgres-source-board
+  AZURE_CONTAINER_APP_NAME: rustserver-aca-azd-port-3000
+  AZURE_RESOURCE_GROUP_NAME: rg-rustserver
+  AZURE_CONTAINER_REGISTRY: crmjmfhdhubp3de
+  IMAGE: rust-server-hello-world
 
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
@@ -19,19 +19,23 @@ permissions:
   id-token: write
   contents: read
 
+defaults:
+  run:
+    working-directory: ./crates/api-postgres-source-board
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
 
-      - name: Checkout to the branch
-        uses: actions/checkout@v2
-
-      - name: Print out app version
-        run: |
-          VERSION=$(grep '^version' "Cargo.toml" | sed -E 's/version = "(.*)"/\1/')
-          echo "APP_VERSION=${VERSION}" >>${GITHUB_ENV}
+      # - name: Check for empty environment variables
+      #   run: |
+      #     if [ -z "${{ env.AZURE_CONTAINER_APP_NAME }}" ] || [ -z "${{ env.AZURE_RESOURCE_GROUP_NAME }}" ] || [ -z "${{ env.AZURE_CONTAINER_REGISTRY }}" ] || [ -z "${{ env.IMAGE }}" ]; then
+      #       echo "One or more required environment variables are empty. Exiting."
+      #       exit 1
+      #     fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -47,36 +51,28 @@ jobs:
         run: docker info
 
       # Push build cache to registry along with image (different tags)
-      # - name: Build and push container image to Azure Container Registry
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     push: true
-      #     tags: |
-      #       ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE }}:${{ github.sha }}
-      #     file: ./Dockerfile
+      - name: Build and push container image to Azure Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE }}:${{ github.sha }}
+          file: ./Dockerfile
 
-      - run: |
-          docker build . -t dfberryregistry.azurecr.io:original
-          docker push dfberryregistry.azurecr.io}:origin
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
 
-  # deploy:
-  #     runs-on: ubuntu-latest
-  #     needs: build
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-  #     steps:
-  #       - name: Azure Login
-  #         uses: azure/login@v2
-  #         with:
-  #           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-  #       - name: Extract repository name
-  #         id: extract_repo
-  #         run: echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-
-  #       - name: Deploy to containerapp
-  #         uses: azure/cli@v2
-  #         with:
-  #           inlineScript: |
-  #             az config set extension.use_dynamic_install=yes_without_prompt
-  #             az containerapp registry set -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP }} --server ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }} --password ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
-  #             az containerapp update -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP }} --image ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE }}:${{ github.sha }}
+      - name: Deploy to containerapp
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az config set extension.use_dynamic_install=yes_without_prompt
+            az containerapp registry set -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} --server ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }} --password ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+            az containerapp update -n ${{ env.AZURE_CONTAINER_APP_NAME }} -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} --image ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE }}:${{ github.sha }}

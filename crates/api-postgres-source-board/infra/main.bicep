@@ -90,12 +90,12 @@ module appsEnv './shared/apps-env.bicep' = {
 }
 
 module rustserverAcaAzdPort3000 './app/rustserver-aca-azd-port-3000.bicep' = {
-  name: 'rustserver-aca-azd-port-3000'
+  name: 'api'
   params: {
-    name: 'rustserver-aca-azd-port-3000'
+    name: 'api'
     location: location
     tags: tags
-    identityName: '${abbrs.managedIdentityUserAssignedIdentities}rustserver-aca-azd-port-3000-${resourceToken}'
+    identityName: 'api-${abbrs.managedIdentityUserAssignedIdentities}-${resourceToken}'
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     containerAppsEnvironmentName: appsEnv.outputs.name
     containerRegistryName: registry.outputs.name

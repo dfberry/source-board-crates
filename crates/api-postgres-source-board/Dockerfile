@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy the built application from the first stage
-COPY --from=builder /app/target/release/api-postgres-source-board /app/api-postgres-source-board
+COPY --from=builder /app/target/release/server /app/server
 COPY --from=builder /app/Cargo.toml /app/Cargo.toml
 
 RUN ls -la
@@ -31,4 +31,6 @@ RUN ls -la
 # Expose port 4000
 EXPOSE 4000
 
-CMD ["PORT=4000 & /app/api-postgres-source-board"]
+ENV PORT 4000
+
+CMD ["/app/server"]
