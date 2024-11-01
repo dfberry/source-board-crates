@@ -29,6 +29,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 pub mod route;
 
 use route::read::list;
+use route::root::getRoot;
 
 #[tokio::main]
 async fn main() {
@@ -43,6 +44,12 @@ async fn main() {
     if env::var("ENVIRONMENT").unwrap_or_else(|_| "development".to_string()) != "production" {
         dotenv().ok();
     }
+
+    // Print out all environment variables
+    for (key, value) in env::vars() {
+        println!("{}: {}", key, value);
+    }
+
     let db_url: String = env::var("DATABASE_URL").expect("DATABASE_URL environment variable not set");
     let port: String= env::var("PORT").expect("PORT environment variable not set");
 
@@ -54,12 +61,14 @@ async fn main() {
 
     // build our application with some routes
     let app = Router::new()
+        .route("/", get(getRoot))
         .route("/user-configs", get(list))
         //.route("/user/create", post(create_user))
         .with_state(pool);
 
     // run it with hyper
     let addr = format!("0.0.0.0:{}", port);
+    println!("API source board - listening on http://{}", addr);
     tracing::debug!("listening on {addr}");
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();

@@ -2,7 +2,7 @@
 
 # SECRETS can only be 20 chars
 
-DOTENV_PATH="../.env"
+DOTENV_PATH=".env"
 
 # Load environment variables from .env file into the script's environment
 if [ -f $DOTENV_PATH ]; then
@@ -57,4 +57,4 @@ while IFS= read -r line || [ -n "$line" ]; do
     --resource-group $AZ_RG \
     --set-env-vars $key=secretref:$TRANSFORMED_KEY
   
-done < ../.env
+done < $DOTENV_PATH

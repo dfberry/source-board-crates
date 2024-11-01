@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOTENV_PATH="../.env"
+DOTENV_PATH=".env"
 
 # Load environment variables from .env file into the script's environment
 if [ -f $DOTENV_PATH ]; then

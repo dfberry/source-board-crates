@@ -28,4 +28,7 @@ COPY --from=builder /app/Cargo.toml /app/Cargo.toml
 
 RUN ls -la
 
-CMD ["/app/api-postgres-source-board"]
+# Expose port 4000
+EXPOSE 4000
+
+CMD ["PORT=4000 & /app/api-postgres-source-board"]

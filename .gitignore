@@ -1,3 +1,18 @@
-target
-.env*
-temp*
+# Ignore target directories
+/target
+**/target/
+
+# Ignore .env files
+/.env*
+**/.env*
+
+# Ignore temp directories and files
+/temp*
+**/temp*
+
+# Ignore .rustup directories
+/.rustup/
+**/.rustup/
+
+# Ignore macOS system files
+.DS_Store

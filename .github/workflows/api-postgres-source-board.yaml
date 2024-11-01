@@ -56,8 +56,8 @@ jobs:
       #     file: ./Dockerfile
 
       - run: |
-          docker build . -t ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}:${{ github.sha }}
-          docker push ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}:${{ github.sha }}
+          docker build . -t dfberryregistry.azurecr.io:original
+          docker push dfberryregistry.azurecr.io}:origin
 
   # deploy:
   #     runs-on: ubuntu-latest
