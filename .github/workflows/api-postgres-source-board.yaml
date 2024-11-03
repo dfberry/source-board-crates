@@ -39,9 +39,10 @@ jobs:
 
       - name: Checkout to the branch
         uses: actions/checkout@v4
-        sparse-checkout: |
-          .github
-          crates/api-postgres-source-board
+        with:
+          sparse-checkout: |
+            .github
+            crates/api-postgres-source-board
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
