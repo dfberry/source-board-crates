@@ -60,7 +60,7 @@ module fetchLatestImage '../modules/fetch-container-image.bicep' = {
 resource app 'Microsoft.App/containerApps@2023-05-02-preview' = {
   name: name
   location: location
-  tags: union(tags, {'azd-service-name':  'rustserver-aca-azd-port-3000' })
+  tags: union(tags, {'azd-service-name':  'rustserver-aca-azd-port-4000' })
   dependsOn: [ acrPullRole ]
   identity: {
     type: 'UserAssigned'
@@ -71,7 +71,7 @@ resource app 'Microsoft.App/containerApps@2023-05-02-preview' = {
     configuration: {
       ingress:  {
         external: true
-        targetPort: 3000
+        targetPort: 4000
         transport: 'auto'
       }
       registries: [
@@ -99,7 +99,7 @@ resource app 'Microsoft.App/containerApps@2023-05-02-preview' = {
             }
             {
               name: 'PORT'
-              value: '3000'
+              value: '4000'
             }
           ],
           env,

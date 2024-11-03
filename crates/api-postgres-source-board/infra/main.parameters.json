@@ -9,7 +9,7 @@
         "value": "${AZURE_LOCATION}"
       },
       "rustserverApiPostgresExists": {
-        "value": "${SERVICE_rustserver_ACA_AZD_PORT_3000_RESOURCE_EXISTS=false}"
+        "value": "${SERVICE_rustserver_ACA_AZD_PORT_4000_RESOURCE_EXISTS=false}"
       },
       "rustserverApiPostgresDefinition": {
         "value": {
