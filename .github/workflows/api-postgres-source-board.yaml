@@ -5,7 +5,7 @@ env:
   AZURE_CONTAINER_APP_NAME: api
   AZURE_CONTAINER_REGISTRY: crnsxqg7ibsurvu
   IMAGE: rust-server-api-postgres
-  WORKING_DIRECTORY: /crates/api-postgres-source-board
+  WORKING_DIRECTORY: ./crates/api-postgres-source-board
 
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
