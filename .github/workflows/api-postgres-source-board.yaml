@@ -1,4 +1,4 @@
-name: build-and-deploy
+name: postgres-build-n-deploy
 
 env:
   AZURE_RESOURCE_GROUP_NAME: rg-postgres-api
