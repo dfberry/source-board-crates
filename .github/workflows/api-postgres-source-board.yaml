@@ -47,8 +47,8 @@ jobs:
           username: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
           password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
 
-      - name: Verify Docker login
-        run: docker info
+      # - name: Verify Docker login
+      #   run: docker info
 
       # Push build cache to registry along with image (different tags)
       - name: Build and push container image to Azure Container Registry
