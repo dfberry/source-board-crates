@@ -7,6 +7,7 @@ This repo provides Rust APIs providing data integration with Postgres.
 * Infra with Azure Developer CLI (AZD): Since Rust isn't supported as a language, I use AZD to only provision the resources in the [infra](infra) folder. AZD is already installed on this development container.
     1. `azd auth login`
     2. `azd provision`
+    3. `azd pipeline configure` to create sp and worflow such as az-dev-11-03-2024-15-26-42
 * Deployment with GitHub Actions in the [.github/workflows/deploy_to_aca.yaml](.github/workflows/deploy_to_aca.yaml) file.
 
 ## Reuse for more API servers
