@@ -4,32 +4,38 @@
 ACR_NAME="crnsxqg7ibsurvu" # Replace with your ACR name
 SP_NAME="rrg-postgres-api-cicd-crnsxqg7ibsurvu"   # Replace with your desired Service Principal name
 RESOURCE_GROUP="rg-postgres-api" # Replace with your resource group name
-KEYVAULT= "kkv-nsxqg7ibsurvu" # Replace with your Key Vault name
+KEY_VAULT_NAME="kv-nsxqg7ibsurvu" # Replace with your Key Vault name
+AZURE_SUBSCRIPTION_ID="19016922-4bf5-4c41-9553-8eff5da1500e"
 
 # Log in to Azure
-az login
+#az login
 
 # Get the ACR registry ID
 ACR_REGISTRY_ID=$(az acr show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query id --output tsv)
+echo "ACR Registry ID: $ACR_REGISTRY_ID"
 
-# Create the Service Principal
-SP=$(az ad sp create-for-rbac --name http://$SP_NAME --scopes $ACR_REGISTRY_ID --role acrpush acrpull)
+# Create the Service Principal1
+SP=$(az ad sp create-for-rbac --name http://$SP_NAME --role acrpush --scopes "subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP")
+echo "Service Principal: $SP"
 
-# Assign 'acrpush' role to the Service Principal
-az role assignment create --assignee $(echo $SP | jq -r '.client_id') --role acrpush --scope $ACR_REGISTRY_ID
+ASSIGNEE=$(echo $SP | jq -r '.appId')
+echo "ASSIGNEE: $ASSIGNEE"
 
 # Assign 'acrpull' role to the Service Principal
-az role assignment create --assignee $(echo $SP | jq -r '.client_id') --role acrpull --scope $ACR_REGISTRY_ID
-
-# Output the Service Principal details
-echo "Service Principal created with the following details:"
-echo $SP
+#az role assignment create --assignee $ASSIGNEE --role acrpull --scope "subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP"
 
 # Extract and display individual values
-CLIENT_ID=$(echo $SP | jq -r '.client_id')
-CLIENT_SECRET=$(echo $SP | jq -r '.client_secret')
-TENANT_ID=$(echo $SP | jq -r '.tenant_id')
+CLIENT_ID=$(echo $SP | jq -r '.appId')
+CLIENT_SECRET=$(echo $SP | jq -r '.password')
+TENANT_ID=$(echo $SP | jq -r '.tenant')
 
 echo "Client ID: $CLIENT_ID"
 echo "Client Secret: $CLIENT_SECRET"
 echo "Tenant ID: $TENANT_ID"
+
+# Store the Service Principal credentials in Azure Key Vault
+# az keyvault secret set --vault-name $KEY_VAULT_NAME --name "${SP_NAME}-client-id" --value $CLIENT_ID
+# az keyvault secret set --vault-name $KEY_VAULT_NAME --name "${SP_NAME}-client-secret" --value $CLIENT_SECRET
+# az keyvault secret set --vault-name $KEY_VAULT_NAME --name "${SP_NAME}-tenant-id" --value $TENANT_ID
+
+

@@ -4,7 +4,7 @@ env:
   AZURE_RESOURCE_GROUP_NAME: rg-postgres-api
   AZURE_CONTAINER_APP_NAME: api
   AZURE_CONTAINER_REGISTRY: crnsxqg7ibsurvu
-  IMAGE: rust-server-api-postgres
+  IMAGE: rg-postgres-api
   WORKING_DIRECTORY: ./crates/api-postgres-source-board
 
 on:
