@@ -8,10 +8,10 @@
       "location": {
         "value": "${AZURE_LOCATION}"
       },
-      "rustserverAcaAzdPort3000Exists": {
+      "rustserverApiPostgresExists": {
         "value": "${SERVICE_rustserver_ACA_AZD_PORT_3000_RESOURCE_EXISTS=false}"
       },
-      "rustserverAcaAzdPort3000Definition": {
+      "rustserverApiPostgresDefinition": {
         "value": {
           "settings": [
             {

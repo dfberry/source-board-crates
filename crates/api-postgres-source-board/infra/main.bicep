@@ -2,16 +2,16 @@ targetScope = 'subscription'
 
 @minLength(1)
 @maxLength(64)
-@description('Name of the environment that can be used as part of naming resource convention')
+@description('Rust API postgres: name of the environment that can be used as part of naming resource convention')
 param environmentName string
 
 @minLength(1)
 @description('Primary location for all resources')
 param location string
 
-param rustserverAcaAzdPort3000Exists bool
+param rustserverApiPostgresExists bool
 @secure()
-param rustserverAcaAzdPort3000Definition object
+param rustserverApiPostgresDefinition object
 
 @description('Id of the user or app to assign application roles')
 param principalId string
@@ -89,7 +89,7 @@ module appsEnv './shared/apps-env.bicep' = {
   scope: rg
 }
 
-module rustserverAcaAzdPort3000 './app/rustserver-aca-azd-port-3000.bicep' = {
+module rustserverApiPostgres './app/rustserver-aca-azd-port-3000.bicep' = {
   name: 'api'
   params: {
     name: 'api'
@@ -99,8 +99,8 @@ module rustserverAcaAzdPort3000 './app/rustserver-aca-azd-port-3000.bicep' = {
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     containerAppsEnvironmentName: appsEnv.outputs.name
     containerRegistryName: registry.outputs.name
-    exists: rustserverAcaAzdPort3000Exists
-    appDefinition: rustserverAcaAzdPort3000Definition
+    exists: rustserverApiPostgresExists
+    appDefinition: rustserverApiPostgresDefinition
   }
   scope: rg
 }
