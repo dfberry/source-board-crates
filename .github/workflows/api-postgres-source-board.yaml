@@ -5,6 +5,7 @@ env:
   AZURE_CONTAINER_APP_NAME: api
   AZURE_CONTAINER_REGISTRY: crnsxqg7ibsurvu
   IMAGE: rust-server-api-postgres
+  WORKING_DIRECTORY: /crates/api-postgres-source-board
 
 on:
   # Automatically trigger it when detected changes in repo. Remove comments to enable
@@ -19,10 +20,10 @@ permissions:
   id-token: write
   contents: read
 
-defaults:
-  # Only changes the working directory for the inline "run" steps.
-  run:
-    working-directory: /crates/api-postgres-source-board
+# defaults:
+#   # Only changes the working directory for the inline "run" steps.
+#   run:
+#     working-directory: ${{ env.WORKING_DIRECTORY }}
 
 
 jobs:
@@ -54,6 +55,12 @@ jobs:
       # - name: Verify Docker login
       #   run: docker info
 
+      - name: DEBuG 1
+        run: ls
+
+      - name: DEBuG 2
+        run: cd ${{ env.WORKING_DIRECTORY }} && ls
+
       # Push build cache to registry along with image (different tags)
       - name: Build and push container image to Azure Container Registry
         uses: docker/build-push-action@v6
@@ -61,7 +68,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE }}:${{ github.sha }}
-          context: /crates/api-postgres-source-board
+          context: ${{ env.WORKING_DIRECTORY }}
 
   deploy:
     runs-on: ubuntu-latest
