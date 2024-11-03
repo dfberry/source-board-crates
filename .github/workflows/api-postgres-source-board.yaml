@@ -20,8 +20,9 @@ permissions:
   contents: read
 
 defaults:
+  # Only changes the working directory for the inline "run" steps.
   run:
-    working-directory: ./crates/api-postgres-source-board
+    working-directory: /crates/api-postgres-source-board
 
 
 jobs:
@@ -65,6 +66,7 @@ jobs:
           tags: |
             ${{ secrets.AZURE_CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE }}:${{ github.sha }}
           file: ./Dockerfile
+          context: /crates/api-postgres-source-board
 
   deploy:
     runs-on: ubuntu-latest
