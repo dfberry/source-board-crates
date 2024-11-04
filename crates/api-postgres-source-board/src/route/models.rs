@@ -2,7 +2,7 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use crate::route::schema::*;
 
-#[derive(Queryable, Identifiable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Selectable, Identifiable, Serialize, Deserialize, Debug)]
 #[table_name = "osb_session"]
 pub struct OsbSession {
     pub id: String,
@@ -20,7 +20,7 @@ pub struct NewOsbSession<'a> {
     pub created_at: chrono::NaiveDateTime,
 }
 
-#[derive(Queryable, Identifiable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Selectable, Identifiable, Serialize, Deserialize, Debug)]
 #[table_name = "osb_token"]
 pub struct OsbToken {
     pub id: String,
@@ -38,7 +38,7 @@ pub struct NewOsbToken<'a> {
     pub created_at: chrono::NaiveDateTime,
 }
 
-#[derive(Queryable, Identifiable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Selectable, Identifiable, Serialize, Deserialize, Debug)]
 #[table_name = "osb_user"]
 pub struct OsbUser {
     pub id: String,

@@ -28,7 +28,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 pub mod route;
 
-use route::read::list;
+use route::read::{listUsersConfigs, listGitHubUsers};
 use route::root::getRoot;
 
 #[tokio::main]
@@ -62,7 +62,8 @@ async fn main() {
     // build our application with some routes
     let app = Router::new()
         .route("/", get(getRoot))
-        .route("/user-configs", get(list))
+        .route("/users/configs", get(listUsersConfigs))
+        .route("/users", get(listGitHubUsers))
         //.route("/user/create", post(create_user))
         .with_state(pool);
 
