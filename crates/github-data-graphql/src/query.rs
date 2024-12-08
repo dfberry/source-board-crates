@@ -12,6 +12,18 @@ pub const REPO_DETAILS_QUERY: &str = r#"
                 watchers {
                     totalCount
                 }
+                stargazers {
+                    totalCount
+                }
+                forks {
+                    totalCount
+                }
+                open_issues: issues(states: [OPEN]) {
+                    totalCount
+                }
+                open_prs: pullRequests(states: [OPEN]) {
+                    totalCount
+                }
             }
         }
     }

@@ -28,6 +28,12 @@ pub struct FlattenedRepoData {
     pushedAt: String,
     diskUsage: i32,
     watchersCount: i32,
+    stargazersCount: i32,
+    forksCount: i32,
+    openIssuesCount: i32,
+    openPRsCount: i32,
+
+
 }
 
 impl FlattenedRepoData {
@@ -42,6 +48,10 @@ impl FlattenedRepoData {
             pushedAt: repo.pushedAt,
             diskUsage: repo.diskUsage,
             watchersCount: repo.watchersCount.totalCount,
+            stargazersCount: repo.stargazersCount.totalCount,
+            forksCount: repo.forksCount.totalCount,
+            openIssuesCount: repo.issues.totalCount,
+            openPRsCount: repo.pullRequests.totalCount
         }
     }
     pub fn toJson(&self) -> String {
@@ -60,12 +70,38 @@ pub struct Repository {
     diskUsage: i32,
     #[serde(rename = "watchers")]
     watchersCount: WatchersCount,
+    #[serde(rename = "stargazers")]
+    stargazersCount: StargazersCount,
+    #[serde(rename = "forks")]
+    forksCount: ForksCount,
+    #[serde(rename = "open_issues")]
+    issues: OpenIssuesCount,
+    #[serde(rename = "open_prs")]
+    pullRequests: OpenPrsCount    
 }
 
 #[derive(Deserialize, Debug)]
 pub struct WatchersCount {
     totalCount: i32,
 }
+#[derive(Deserialize, Debug)]
+pub struct StargazersCount {
+    totalCount: i32,
+}
+#[derive(Deserialize, Debug)]
+pub struct ForksCount {
+    totalCount: i32,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct OpenIssuesCount {
+    totalCount: i32,
+}
+#[derive(Deserialize, Debug)]
+pub struct OpenPrsCount {
+    totalCount: i32,
+}
+
 
 #[derive(Deserialize, Debug)]
 pub struct RepoData {
