@@ -1,0 +1,44 @@
+fragment RepoEx on Repository {
+  repositoryName: name
+  id
+  url
+  descriptionHTML
+  isArchived
+  isEmpty
+  isPrivate
+  isTemplate
+  isDisabled
+  createdAt
+  updatedAt
+  pushedAt
+  diskUsage
+  languages(first: 100) {
+    edges {
+      node {
+        name
+      }
+    }
+  }
+  watchers {
+    totalCount
+  }
+  stargazers {
+    totalCount
+  }
+  forks {
+    totalCount
+  }
+  open_issues: issues(states: [OPEN]) {
+    totalCount
+  }
+  open_prs: pullRequests(states: [OPEN]) {
+    totalCount
+  }
+}
+query RepoDetails($organization: String!, $repository: String!, $pat: String!) {
+  organization(login: $organization) {
+    repository(name: $repository) {
+      ...RepoEx
+    }
+  }
+}
