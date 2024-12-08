@@ -1,88 +1,17 @@
 use clap::Parser;
-use dotenvy::dotenv;
 use reqwest::Client;
 use serde_json::json;
 use serde::{Serialize, Deserialize};
 
-#[derive(Parser, Debug)]
-#[clap(author, version, about, long_about = None)]
-struct Args {
-    /// GitHub organization
-    #[clap(short, long)]
-    org: String,
+pub mod models;
+pub mod query;
 
-    /// GitHub repository
-    #[clap(short, long)]
-    repo: String,
-
-    /// Personal Access Token
-    #[clap(short, long)]
-    pat: String,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-struct FlattenedRepoData {
-    name: String,
-    description: Option<String>,
-    url: String,
-    createdAt: String,
-    updatedAt: String,
-    pushedAt: String,
-    diskUsage: i32,
-    watchersCount: i32,
-}
-
-impl FlattenedRepoData {
-    fn from(repo: Repository) -> Self {
-
-        FlattenedRepoData {
-            name: repo.name,
-            description: repo.description,
-            url: repo.url,
-            createdAt: repo.createdAt,
-            updatedAt: repo.updatedAt,
-            pushedAt: repo.pushedAt,
-            diskUsage: repo.diskUsage,
-            watchersCount: repo.watchersCount.totalCount,
-        }
-    }
-    fn toJson(&self) -> String {
-        json!(self).to_string()
-    }
-}
-
-#[derive(Deserialize, Debug)]
-struct Repository {
-    name: String,
-    description: Option<String>,
-    url: String,
-    createdAt: String,
-    updatedAt: String,
-    pushedAt: String,
-    diskUsage: i32,
-    #[serde(rename = "watchers")]
-    watchersCount: WatchersCount,
-}
-
-#[derive(Deserialize, Debug)]
-struct WatchersCount {
-    totalCount: i32,
-}
-
-#[derive(Deserialize, Debug)]
-struct RepoData {
-    repository: Repository,
-}
-
-#[derive(Deserialize, Debug)]
-struct OrgData {
-    organization: RepoData,
-}
-
-#[derive(Deserialize, Debug)]
-struct ResponseData {
-    data: OrgData,
-}
+use models::{
+    Args,
+    FlattenedRepoData,
+    ResponseData
+};
+use query::REPO_DETAILS_QUERY;
 
 async fn query_github_api(
     org: &str, 
@@ -90,24 +19,7 @@ async fn query_github_api(
     pat: &str
 ) -> Result<ResponseData, Box<dyn std::error::Error>> {
     let client = Client::new();
-    let query = r#"
-        query RepoDetails($organization: String!, $repository: String!) {
-            organization(login: $organization) {
-                repository(name: $repository) {
-                    name
-                    description
-                    url
-                    createdAt
-                    updatedAt
-                    pushedAt
-                    diskUsage
-                    watchers {
-                        totalCount
-                    }
-                }
-            }
-        }
-    "#;
+    let query = REPO_DETAILS_QUERY;
 
     let variables = serde_json::json!({
         "organization": org,
