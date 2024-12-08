@@ -1,18 +1,33 @@
-# docker build --no-cache -t ghcli:v1 .
-# docker run -p 4000:4000 ghcli:v1 --org MicrosoftDocs --repo node-essentials --pat your_personal_access_token
-FROM rust AS builder
+# https://dev.to/rogertorres/first-steps-with-docker-rust-30oi
+# docker build --no-cache -t server:latest .
+# docker run --rm --name server1 server
 
-WORKDIR /app
+FROM rust as build
 
-# Copy the actual source code
-COPY . .
+# create a new empty shell project
+RUN USER=root cargo new --bin server
+WORKDIR /server
 
-# Build the dependencies
+# copy over your manifests
+COPY ./Cargo* .
+
+# this build step will cache your dependencies
+RUN cargo build --release
+RUN rm src/*.rs
+
+# copy your source tree
+COPY ./src ./src
+
+# build for release
+RUN rm ./target/release/deps/server*
 RUN cargo build --release
 
-# Expose port 4000
-EXPOSE 4000
+#--------------------------------------------------------------
+# our final base
+FROM rust
 
-ENV PORT=4000
+# copy the build artifact from the build stage
+COPY --from=build /server/target/release/server .
 
-CMD ["/bin/bash"]
+# set the startup command to run your binary
+CMD ["./server"]
