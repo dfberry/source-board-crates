@@ -40,7 +40,7 @@ jobs:
 
     - name: Build the Rust application
       run: cargo build --release
-      working-directory: github-data-graphql-database
+      working-directory: crates/github-data-graphql-database
 
     - name: Run the Rust application
       env:
@@ -48,4 +48,4 @@ jobs:
         PG_DATABASE_URL: ${{ secrets.PG_DATABASE_URL }}
         MONGO_DATABASE_URL: ${{ secrets.MONGO_DATABASE_URL }}
       run: cargo run --release
-      working-directory: github-data-graphql-database
+      working-directory: crates/github-data-graphql-database
