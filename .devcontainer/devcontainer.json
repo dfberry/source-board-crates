@@ -21,7 +21,8 @@
 				"mhutchie.git-graph",
 				"eamodio.gitlens",
 				"GitHub.vscode-pull-request-github",
-				"ms-azuretools.vscode-bicep"
+				"ms-azuretools.vscode-bicep",
+				"mongodb.mongodb-vscode"
 			]
 		}
 	},
@@ -39,7 +40,7 @@
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [4000,5432],
+	"forwardPorts": [4000,5432,27017],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	//"postCreateCommand": "chmod +x ./.devcontainer/post-create-command.sh && ./.devcontainer/post-create-command.sh"
