@@ -1,6 +1,6 @@
 # Get repo data
 
-Get list of repos from postgres and insert data into mongodb.
+Nightly GitHub action and Rust app to get list of repos from postgres and insert data into mongodb.
 
 ## Get unique repo list out of Postgres
 
