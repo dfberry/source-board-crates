@@ -1,6 +1,6 @@
 [package]
 name = "github-data-graphql-database-pg"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 
 [dependencies]
@@ -8,6 +8,7 @@ bson = "2.9.0"
 chrono = { version = "0.4", features = ["serde"] }
 clap = { version = "4.5.23", features = ["derive"] }
 diesel = { version = "2.2.6", features = ["postgres", "chrono", "uuid", "serde_json"] }
+diesel-async = { version = "0.5.2", features = ["postgres"] }
 dotenvy = "0.15.7"
 futures = "0.3"
 futures-core = "0.3.14"
@@ -25,7 +26,6 @@ tokio-postgres = "0.7"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 uuid = { version = "1.10.0", features = ["v4","fast-rng", "serde"] }
-diesel-async = { version = "0.5.2", features = ["postgres"] }
 
 [[bin]]
 name = "server"

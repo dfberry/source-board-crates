@@ -1,7 +1,7 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
-    logfiles (id) {
+    osb_github_logfiles (id) {
         id -> Uuid,
         logfile -> Jsonb,
         created_at -> Timestamptz,

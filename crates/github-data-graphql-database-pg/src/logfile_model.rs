@@ -7,10 +7,10 @@ use serde::{Serialize, Deserialize};
 use uuid::Uuid;
 use chrono::NaiveDateTime;
 use serde_json::Value;
-use crate::diesel_schema::logfiles;
+use crate::diesel_schema::osb_github_logfiles;
 
 #[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
-#[diesel(table_name = logfiles)]
+#[diesel(table_name = osb_github_logfiles)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Logfile {
     pub id: Uuid,
@@ -21,7 +21,7 @@ pub struct Logfile {
 }
 
 #[derive(Insertable)]
-#[diesel(table_name = logfiles)]
+#[diesel(table_name = osb_github_logfiles)]
 pub struct NewLogfile{
     pub logfile: Value,
     pub org_repo: String

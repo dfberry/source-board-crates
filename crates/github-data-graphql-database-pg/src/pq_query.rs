@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 use crate::diesel_schema::osb_user_custom_config;
 use diesel::result::Error;
-use crate::diesel_schema::logfiles::dsl::*;
+use crate::diesel_schema::osb_github_logfiles::dsl::*;
 use crate::diesel_schema::osb_user_custom_config::dsl::*;
 use diesel::dsl::exists;
 use diesel::dsl::select;
@@ -41,7 +41,7 @@ pub async fn get_repos(connection: &mut AsyncPgConnection, limit: i64, offset: i
 }
 
 pub async fn insert_repos(connection: &mut AsyncPgConnection, repo: NewLogfile) -> Result<String, Error> {
-    let rows_inserted = diesel::insert_into(logfiles)
+    let rows_inserted = diesel::insert_into(osb_github_logfiles)
         .values(&repo)
         .execute(connection)
         .await?;
@@ -60,7 +60,7 @@ struct ExistsResult {
 }
 
 pub async fn verify_tables_exist(connection: &mut AsyncPgConnection) -> Result<(), Error> {
-    let logfiles_exists = diesel::sql_query("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'logfiles')")
+    let logfiles_exists = diesel::sql_query("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'osb_github_logfiles')")
         .get_result::<ExistsResult>(connection)
         .await?
         .exists;
