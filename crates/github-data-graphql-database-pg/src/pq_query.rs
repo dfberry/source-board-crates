@@ -18,7 +18,7 @@ use diesel_async::{RunQueryDsl, AsyncConnection, AsyncPgConnection};
 pub async fn get_connection_async() -> Result<AsyncPgConnection, Box<dyn std::error::Error>> {
     dotenv().ok();
 
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let database_url = env::var("PG_DATABASE_URL").expect("PG_DATABASE_URL must be set");
     let connection = AsyncPgConnection::establish(&database_url).await?;
     Ok(connection)
 }
