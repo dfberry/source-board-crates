@@ -1,4 +1,4 @@
-name: GitHub log
+name: GitHub log PG
 
 on:
   schedule:
