@@ -1,0 +1,51 @@
+name: GitHub log
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # This cron expression runs the job daily at midnight UTC
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y libpq-dev
+
+    - name: Cache cargo registry
+      uses: actions/cache@v2
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-registry-
+
+    - name: Cache cargo index
+      uses: actions/cache@v2
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-index-
+
+    - name: Build the Rust application
+      run: cargo build --release
+      working-directory: crates/github-data-graphql-database-pg
+
+    - name: Run the Rust application
+      env:
+        PAT: ${{ secrets.PAT }}
+        PG_DATABASE_URL: ${{ secrets.PG_DATABASE_URL }}
+        MONGO_DATABASE_URL: ${{ secrets.MONGO_DATABASE_URL }}
+      run: cargo run --release
+      working-directory: crates/github-data-graphql-database-pg
