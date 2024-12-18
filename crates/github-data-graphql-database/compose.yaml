@@ -27,13 +27,13 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=admin
     hostname: pgadmin
 
-  mongo:
-    container_name: mongo
-    image: mongo:latest
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=mongo
-      - MONGO_INITDB_ROOT_PASSWORD=mongo
-    hostname: mongo
+  # mongo:
+  #   container_name: mongo
+  #   image: mongo:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - "27017:27017"
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=mongo
+  #     - MONGO_INITDB_ROOT_PASSWORD=mongo
+  #   hostname: mongo
