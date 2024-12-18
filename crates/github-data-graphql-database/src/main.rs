@@ -6,13 +6,12 @@ use chrono::Utc;
 pub mod models;
 pub mod graphql_query;
 pub mod github_query;
-pub mod mongo_query;
 pub mod pq_query;
 pub mod diesel_schema;
 
 use models::FlattenedRepoData;
 use github_query::query_github_api;
-use mongo_query::create;
+//use mongo_query::create;
 
 
 #[tokio::main]
@@ -22,16 +21,16 @@ async fn main() {
 
     let pat = env::var("PAT").expect("PAT environment variable not set");
     let pg_database_url = env::var("PG_DATABASE_URL").expect("PG_DATABASE_URL environment variable not set");
-    let mongo_database_url = env::var("MONGO_DATABASE_URL").expect("MONGO_DATABASE_URL environment variable not set");
+    //let mongo_database_url = env::var("MONGO_DATABASE_URL").expect("MONGO_DATABASE_URL environment variable not set");
 
     let mut pg_connection = pq_query::get_connection(&pg_database_url);
     let mut pg_offset = 0;
     let pg_limit = 50;
     let mut pg_end: bool = false;
 
-    let mongo_connection = mongo_query::get_connection(mongo_database_url).await;
-    let database = mongo_connection.database("osb");
-    let collection = database.collection::<bson::Document>("repos_historical_data");
+    //let mongo_connection = mongo_query::get_connection(mongo_database_url).await;
+    //let database = mongo_connection.database("osb");
+    //let collection = database.collection::<bson::Document>("repos_historical_data");
     let mut i = 0;
 
     loop {
@@ -79,8 +78,18 @@ async fn main() {
             json_data["log_time"] = json!(Utc::now().to_rfc3339());
     
             // insert the json_data into the mongo database
-            if let Err(e) = create(&collection, json_data).await {
-                eprintln!("Error inserting into MongoDB: {}", e);
+            // if let Err(e) = create(&collection, json_data).await {
+            //     eprintln!("Error inserting into MongoDB: {}", e);
+            //     continue;
+            // }
+
+            let new_logfile = pq_query::NewLogfile {
+                org_repo: repo.clone(),
+                logfile: json_data,
+            };
+
+            if let Err(e) = pq_query::insert_repos(&mut pg_connection, new_logfile).await {
+                eprintln!("Error inserting {} into PostgreSQL: {}", repo, e);
                 continue;
             }
         }

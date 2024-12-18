@@ -27,7 +27,7 @@ Get org and repo name from Postgres with Diesel.
 
 ## Insert GitHub info into MongoDB
 
-Insert as log
+Insert as log into osb_github_logfiles
 
 ```json
 {
